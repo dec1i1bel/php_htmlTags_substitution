@@ -23,78 +23,74 @@
   if(isset($_POST['submit']))
   {
     $input_text = $_POST['input_text'];
+
+    //считаем символы
+    $input_text_withSpaces__length = strlen($input_text);
+    $input_text_withoutSpaces__length = strlen(str_replace(' ','', $input_text));
+
     $input_text_modified = preg_replace('~[\\n\\r]+?~','|',$input_text);
     $input_array = explode('|||',$input_text_modified);
 
-    /**
-     * bug:
-     * если идёт список -> строка более 200 символов -> список, то:
-     * <ul>
-     *  <li>blabla</li>
-     *  <li>blabla</li>
-     * </ul>
-     * <ul>
-     *  tself, because it is pain, but because occasionally circumstances occur in which toil and pain can procure him some great pleasure. To take a trivial example,
-     *  <li> which of us ever undertakes laborious </li>
-     * </ul>
-     */
     foreach($input_array as $paragraphNumber => $paragraph)
     {
       $paragraph_array = explode('||', $paragraph);
       $paragraph = ltrim($paragraph, '|');
-      
+
+    /** размечаем список из подряд идущих абзацев */
       if(count($paragraph_array) > 1)
       {
         foreach($paragraph_array as $lineNumber => $line)
         {
+          //отсекаем прямые слэши в начале строк
           $line = ltrim($line, '|');
-          // if(strlen($line) <= 200)
-          // {
-            if(strlen($line) <= 130)
-            {
-              $line = '<li>'.$line.'</li>';
-            }
-            // else
-            // {
-            //   if(($lineNumber >= 1) && ($lineNumber < count($paragraph_array)-1))
-            //   {
-            //     if((strlen($line) + 30 <= strlen($paragraph_array[$lineNumber+1])) && (strlen($line)-30 >= strlen($paragraph_array[$lineNumber-1])))
-            //     {
-            //       $line = '<li>'.$line.'</li>';
-            //     }
-            //   }
-            // }
+
+          //удаляем лишние пробелы
+          $line = trim(preg_replace('/\s+/', ' ', $line));
+
+          if(strlen($line) <= 130)
+          {
+            $line = '<li>'.$line.'</li>'."\n";
             if($lineNumber === 0)
             {
-              $line = '<ul>'.$line;
+              $line = '<ul>'."\n".$line;
             }
-            elseif($lineNumber === count($paragraph_array)-1)
+            if($lineNumber === count($paragraph_array)-1)
             {
-              $line = $line.'</ul>';
+              $line = $line.'</ul>'."\n";
             }
-          // }
-          // else
-          // {
-          //   $line = '<p>'.$line.'</p>';
-          // }
+          }
+          else
+          {
+            $line = '<p>'.$line.'</p>'."\n";
+          }
           $strResult.= $line;
         }
       }
+
+      /** находим заголовки и параграфы */
       else
+      //удаляем лишние пробелы
+      $paragraph = trim(preg_replace('/\s+/', ' ', $paragraph));
       {
         if(strlen($paragraph) <= 90 || (($paragraphNumber === 0) && (strlen($paragraph) <= 90)))
         {
-          $paragraph = '<h2>'.$paragraph.'</h2>';
+          $paragraph = '<h2>'.$paragraph.'</h2>'."\n";
         }
         else
         {
-          $paragraph = '<p>'.$paragraph.'</p>';
+          $paragraph = '<p>'.$paragraph.'</p>'."\n";
         }
         $strResult.= $paragraph;
       }
     }
   }
   ?>
+  <h1>Количество символов</h1>
+  <h4>без учёта тегов html:</h4>
+  <ul>
+    <li>С пробелами: <?= isset($input_text_withSpaces__length) ? $input_text_withSpaces__length : '<i>нет данных</i>' ?></li>
+    <li>Без пробелов: <?= isset($input_text_withoutSpaces__length) ? $input_text_withoutSpaces__length : '<i>нет данных</i>' ?></li>
+  </ul>
   <h1>Разметка:</h1>
   <p><textarea name="preview_text" id="preview_text" cols="50" rows="10" disabled><?php
             if(isset($strResult)) {

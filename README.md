@@ -1,2 +1,11 @@
 # php_htmlTags_substitution
-Form to input some text. After submitting html tags are substituted, and the result is appearing with html markup
+Form to input some text. After submitting html tags are substituted, and the result is appearing with html markup.
+
+Requrements:
+- [+] Заголовки до 90 символов, беруться в теги h2 (<h2>Заголовок</h2>).
+- [+] Списки (несколько подряд абзацев) до 130 символов беруться в теги ul, li (<ul><li>Список 1</li><li>Список 1</li><li>Список 1</li></ul>).
+- [+] Абзацы текста (более 130 символов без переноса строк) беруться в теги p (<p>Абзац текста</p>). Все, что не определено, как заголовок или список береться в теги p(<p></p>)
+- [-] После . : поставить пробел если нету,
+- [+] удалить двойные, тройные и тд пробелы
+- [-] Подсчет количества символов без html разметки (с пробелами и без)
+- [+] В результате добавить переносы строк.
