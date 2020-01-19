@@ -27,6 +27,11 @@
     //считаем символы
     $input_text_withSpaces__length = strlen($input_text);
     $input_text_withoutSpaces__length = strlen(str_replace(' ','', $input_text));
+    // -----------
+
+    // после всех точек и двоеточий препинания ставим пробелы, лишние удалятся ниже по тексту
+      $input_text = str_replace(['.',':'],['. ',': '],$input_text);
+    // -----------
 
     $input_text_modified = preg_replace('~[\\n\\r]+?~','|',$input_text);
     $input_array = explode('|||',$input_text_modified);
@@ -86,7 +91,7 @@
   }
   ?>
   <h1>Количество символов</h1>
-  <h4>без учёта тегов html:</h4>
+  <h4>без учёта тегов html, с учётом лишних пробелов в пользовательском вводе (если они есть):</h4>
   <ul>
     <li>С пробелами: <?= isset($input_text_withSpaces__length) ? $input_text_withSpaces__length : '<i>нет данных</i>' ?></li>
     <li>Без пробелов: <?= isset($input_text_withoutSpaces__length) ? $input_text_withoutSpaces__length : '<i>нет данных</i>' ?></li>
