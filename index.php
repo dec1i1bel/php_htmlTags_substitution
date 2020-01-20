@@ -30,8 +30,11 @@
     // -----------
 
     // после всех точек и двоеточий препинания ставим пробелы, лишние удалятся ниже по тексту
-      $input_text = str_replace(['.',':'],['. ',': '],$input_text);
+    $input_text = str_replace(['.',':'],['. ',': '],$input_text);
     // -----------
+
+    // фразы в кавычках обрамляем тегами (теги также внутри кавычек)
+    $input_text = str_replace([' "', '" '],[' "<span style="font-style: italic">','</span>" '],$input_text);
 
     $input_text_modified = preg_replace('~[\\n\\r]+?~','|',$input_text);
     $input_array = explode('|||',$input_text_modified);
@@ -52,17 +55,20 @@
           //удаляем лишние пробелы
           $line = trim(preg_replace('/\s+/', ' ', $line));
 
-          if(strlen($line) <= 130)
+          if(strlen($line) <= 200)
           {
-            $line = '<li>'.$line.'</li>'."\n";
-            if($lineNumber === 0)
-            {
-              $line = "\n".'<ul>'."\n".$line;
-            }
-            if($lineNumber === count($paragraph_array)-1)
-            {
-              $line = $line.'</ul>'."\n";
-            }
+            if((($lineNumber<count($paragraph_array)-1) && (strlen($line)+30 >= strlen($paragraph_array[$lineNumber+1])) && (strlen($line)-30 >= strlen($paragraph_array[$lineNumber+1]))) || (strlen($line) <= 130))
+              {
+                $line = '<li>'.$line.'</li>'."\n";
+              }
+              if($lineNumber === 0)
+              {
+                $line = "\n".'<ul>'."\n".$line;
+              }
+              if($lineNumber === count($paragraph_array)-1)
+              {
+                $line = $line.'</ul>'."\n";
+              }
           }
           else
           {
