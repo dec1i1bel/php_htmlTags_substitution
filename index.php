@@ -57,7 +57,7 @@
             $line = '<li>'.$line.'</li>'."\n";
             if($lineNumber === 0)
             {
-              $line = '<ul>'."\n".$line;
+              $line = "\n".'<ul>'."\n".$line;
             }
             if($lineNumber === count($paragraph_array)-1)
             {
@@ -66,7 +66,7 @@
           }
           else
           {
-            $line = '<p>'.$line.'</p>'."\n";
+            $line = "\n".'<p>'.$line.'</p>'."\n";
           }
           $strResult.= $line;
         }
@@ -75,15 +75,15 @@
       /** находим заголовки и параграфы */
       else
       //удаляем лишние пробелы
-      $paragraph = trim(preg_replace('/\s+/', ' ', $paragraph));
       {
+        $paragraph = trim(preg_replace('/\s+/', ' ', $paragraph));
         if(strlen($paragraph) <= 90 || (($paragraphNumber === 0) && (strlen($paragraph) <= 90)))
         {
-          $paragraph = '<h2>'.$paragraph.'</h2>'."\n";
+          $paragraph = "\n".'<h2>'.$paragraph.'</h2>'."\n";
         }
         else
         {
-          $paragraph = '<p>'.$paragraph.'</p>'."\n";
+          $paragraph = "\n".'<p>'.$paragraph.'</p>'."\n";
         }
         $strResult.= $paragraph;
       }
